@@ -3,6 +3,17 @@
     "name": "cambing-app",
     "slug": "cambing-app",
     "version": "1.0.0",
+    "plugins": [
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "837357374709515",
+          "clientToken": "c23995081230ceb2da23b77a2cc560b3",
+          "displayName": "Cambing App"
+        }
+      ]
+
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
