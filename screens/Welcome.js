@@ -1,12 +1,12 @@
 import { StyleSheet, View, Text, ImageBackground,Pressable  } from 'react-native'
 import React from 'react'
-import COLORS from '../../constants/colors';
-import Button from '../../components/Button';
+import COLORS from '../constants/colors';
+import Button from '../components/Button';
 
 
 export default function Welcome( {navigation} ) {
   return (
-    <ImageBackground style={styles.container} source={require('../../assets/image/welcome.png')}>
+    <ImageBackground style={styles.container} source={require('../assets/image/welcome.png')}>
         <View style={styles.content}>
             {/* Content */}
             <Text style={styles.title}>Let's Get Started</Text>

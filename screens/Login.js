@@ -1,13 +1,13 @@
 import { StyleSheet, View, Text, ImageBackground,Image,Pressable  } from 'react-native'
 import React, { useState } from 'react'
-import COLORS from '../../constants/colors';
-import Button from '../../components/Button';
+import COLORS from '../constants/colors';
+import Button from '../components/Button';
 import { TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from 'expo-checkbox';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH } from '../../firebaseConfig'; 
+import { FIREBASE_AUTH } from '../firebaseConfig'; 
 
 
 const Login = ({ navigation }) => {
@@ -21,14 +21,18 @@ const Login = ({ navigation }) => {
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         const user = userCredential.user;
+        navigation.navigate("Home")
     })
     .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
     });
   };
+  const loginWithFacebook = async () =>{
+    console.log(1);
+  }
   return (
-    <ImageBackground style={styles.container} source={require('../../assets/image/login.png')}>
+    <ImageBackground style={styles.container} source={require('../assets/image/login.png')}>
         <View style={styles.content}>
             {/* <View style={styles.item}>
                 <Text style={styles.titleInput}>Phone</Text>
@@ -135,7 +139,7 @@ const Login = ({ navigation }) => {
                 <TouchableOpacity style={styles.itemSocial} onPress={loginWithFacebook}>
                     <Image 
                         style={styles.imageSocial}
-                        source={require('../../assets/image/facebook.png')}
+                        source={require('../assets/image/facebook.png')}
                         resizeMode='contain'
                     />
                     <Text>Facebook</Text>
@@ -143,7 +147,7 @@ const Login = ({ navigation }) => {
                 <TouchableOpacity style={styles.itemSocial} onPress={() => console.log("Press")}>
                     <Image 
                         style={styles.imageSocial}
-                        source={require('../../assets/image/gmail.png')}
+                        source={require('../assets/image/gmail.png')}
                         resizeMode='contain'
                     />
                     <Text>Google</Text>

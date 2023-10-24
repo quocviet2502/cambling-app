@@ -1,13 +1,13 @@
 import { StyleSheet, View, Text, ImageBackground,Image,Pressable, Alert  } from 'react-native'
 import React, { useState,useEffect } from 'react'
-import COLORS from '../../constants/colors';
-import Button from '../../components/Button';
+import COLORS from '../constants/colors';
+import Button from '../components/Button';
 import { TextInput } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from 'expo-checkbox';
 import {createUserWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH } from '../../firebaseConfig';
+import { FIREBASE_AUTH } from '../firebaseConfig';
 import { Constants, Facebook } from 'expo';
 const Signup = ({ navigation }) => {
     const [isPasswordShow,setIsPasswordShow] = useState(false);
@@ -31,7 +31,7 @@ const Signup = ({ navigation }) => {
 
     };
   return (
-    <ImageBackground style={styles.container} source={require('../../assets/image/register.png')}>
+    <ImageBackground style={styles.container} source={require('../assets/image/register.png')}>
         <View style={styles.content}>
             <View style={styles.item}>
                 <Text style={styles.titleInput}>Email address</Text>
@@ -137,7 +137,7 @@ const Signup = ({ navigation }) => {
                 <TouchableOpacity style={styles.itemSocial} onPress={() => console.log("Press")}>
                     <Image 
                         style={styles.imageSocial}
-                        source={require('../../assets/image/facebook.png')}
+                        source={require('../assets/image/facebook.png')}
                         resizeMode="contain"
                     />
                     <Text>Facebook</Text>
@@ -145,7 +145,7 @@ const Signup = ({ navigation }) => {
                 <TouchableOpacity style={styles.itemSocial} onPress={() => console.log("Press")}>
                     <Image 
                         style={styles.imageSocial}
-                        source={require('../../assets/image/gmail.png')}
+                        source={require('../assets/image/gmail.png')}
                         resizeMode="contain"
                     />
                     <Text>Google</Text>
