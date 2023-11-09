@@ -89,7 +89,7 @@ const Detail = ({ navigation, route }) => {
             <DataTimePicker
               display="spinner"
               mode='date'
-              value={dateOfBirth}
+              value={date}
               onChange={onChange}
               style={styles.datePicker}
               maximumDate={new Date()}
@@ -121,7 +121,6 @@ const Detail = ({ navigation, route }) => {
                 <TextInput style={styles.input}
                   onChangeText={setDateOfBirth}
                   value={dateOfBirth}
-                  placeholder='Sat Aug 21 2004'
                   onPressIn={toggleDatepicker}
                 />
               </Pressable>

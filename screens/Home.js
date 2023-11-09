@@ -11,7 +11,7 @@ const Home = ({ navigation }) => {
     const [hikes, setHikes] = useState([]);
     const isFocused = useIsFocused();
     const showAlert = (id,name) =>
-    Alert.alert('Confirmation', `Bạn muốn xoá Hike: ${name}?`, [
+    Alert.alert('Confirmation', `You want delete?: ${name}?`, [
         {
             text: 'Cancel',
             onPress: () => console.log('Cancel Pressed'),

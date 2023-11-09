@@ -5,7 +5,7 @@ import React from 'react'
 
 const ButtonDeleteAll = ({ handleDeleteAll }) => {
     const showAlert = () =>
-        Alert.alert('Confirmation', 'Bạn muốn xoá toàn bộ?', [
+        Alert.alert('Confirmation', 'Delete all?', [
             {
                 text: 'Cancel',
                 onPress: () => console.log('Cancel Pressed'),
