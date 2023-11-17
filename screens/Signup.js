@@ -8,7 +8,6 @@ import { Ionicons } from "@expo/vector-icons";
 import Checkbox from 'expo-checkbox';
 import {createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from '../firebaseConfig';
-import { Constants, Facebook } from 'expo';
 const Signup = ({ navigation }) => {
     const [isPasswordShow,setIsPasswordShow] = useState(false);
     const [isCheckbox,setIsCheckbox]         = useState(false);

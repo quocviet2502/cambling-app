@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ImageBackground, StyleSheet,Alert } from 'react-native';
 import { useIsFocused } from "@react-navigation/native";
 import COLORS from '../constants/colors';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import ButtonDeleteAll from '../components/ButtonDeleteAll';
 import Database from '../Database';
 // import Items from '../components/Items';
 
-const Home = ({ navigation, route}) => {
-    const [hikes, setHikes] = useState([]);
+const Observation = ({ navigation, route}) => {
+    const [observation, setObservation] = useState([]);
     const isFocused = useIsFocused();
     const { userId } = route.params;
     const showAlert = (id,name) =>
@@ -18,41 +18,39 @@ const Home = ({ navigation, route}) => {
             onPress: () => console.log('Cancel Pressed'),
             style: 'cancel',
         },
-        { text: 'OK', onPress: () => handleDeleteHike(id) },
+        { text: 'OK', onPress: () => handleDeleteObservation(id) },
     ]);
     useEffect(() => {
         const fetchData = async (userId) => {
             try {
-                const data = await Database.getHikes(userId);
-                setHikes(data);
+                const data = await Database.getObservation(userId);
+                setObservation(data);
             } catch (error) {
-                console.log("Error fetching hikes", error);
+                console.log("Error", error);
             }
         };
         fetchData(userId);
     }, [isFocused]);
 
-    const handleDeleteHike = async (id) => {
-        await Database.deleteHikes(id);
-        const data = await Database.getHikes();
-        setHikes(data);
+    const handleDeleteObservation = async (id) => {
+        await Database.deleteObservation(id);
+        const data = await Database.getObservation();
+        setObservation(data);
     };
 
     const handleDeleteAll = async () => {
-        Database.clearAllHikes();
-        setHikes([]); // Xóa tất cả hike khỏi danh sách
+        Database.clearAllObservation();
+        setObservation([]); // Xóa tất cả hike khỏi danh sách
     }
     const renderTodoItem = ({ item }) => (
         <View style={styles.item}>
             <TouchableOpacity
-                style={styles.name}
-                onPress={() => navigation.navigate("Detail", { hikes: item })}
-            >
-                <Text style={styles.textName}>{item.hike_name}</Text>
+                style={styles.name} onPress={() => navigation.navigate("DetailObservation", { observation: item })}>
+                <Text style={styles.textName}>{item.observation_name}</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.buttonDelete}
-                onPress={() => showAlert(item.id,item.hike_name)}
+                onPress={() => showAlert(item.id,item.observation_name)}
             >
                 <Text style={styles.textDelete}>Delete</Text>
             </TouchableOpacity>
@@ -64,21 +62,21 @@ const Home = ({ navigation, route}) => {
             <View style={styles.header}>
                 <TouchableOpacity style={styles.buttonHome}>
                     <Ionicons name="home" size={30} color="white" />
-                    <Text style={styles.textHome}>Hikes</Text>
+                    <Text style={styles.textHome}>Observation</Text>
                 </TouchableOpacity>
                 <ButtonDeleteAll handleDeleteAll={handleDeleteAll} />
             </View>
             <FlatList 
                 style={styles.content}
-                data={hikes}
+                data={observation}
                 renderItem={renderTodoItem}
                 keyExtractor={(item) => item.id.toString()}>
             </FlatList>
             <View style={styles.bottom}>
-                <TouchableOpacity onPress={() => navigation.navigate("Observation",{userId:userId})} style={styles.item}>
-                    <Text style={styles.textItem}>Observation</Text>
+                <TouchableOpacity style={styles.item}>
+                    <Text style={styles.textItem}>Hikes</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Add",{userId:userId})} style={styles.item}>
+                <TouchableOpacity onPress={() => navigation.navigate("DetailObservation",{userId:userId})} style={styles.item}>
                     <Text style={styles.textItem}>Add</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item}>
@@ -89,7 +87,7 @@ const Home = ({ navigation, route}) => {
     );
 }
 
-export default Home;
+export default Observation;
 
 const styles = StyleSheet.create({
     container: {

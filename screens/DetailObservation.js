@@ -1,49 +1,34 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground, Alert, Pressable, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ImageBackground, Alert, Pressable } from 'react-native';
 import COLORS from '../constants/colors';
 import { Ionicons } from "@expo/vector-icons";
-import Checkbox from 'expo-checkbox';
+import React, { useState, useEffect } from 'react'
 import DataTimePicker from '@react-native-community/datetimepicker';
 import Database from "../Database";
-import React, { useState } from 'react'
+const DetailObservation = ({ navigation, route }) => {
 
-const Add = ({ navigation,route }) => {
-  const { userId } = route.params;
-  const [isCheckbox, setIsCheckbox] = useState(true);
+  const { observation } = route.params;
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [packing, setPacking] = useState(true);
-  const [lenght, setLength] = useState("");
-  const [level, setLevel] = useState("");
-  const [description, setDescription] = useState("");
-
-  const handleCheckboxChange = (value) => {
-    setIsCheckbox(value);
-    setPacking(value); // Lưu giá trị vào biến packing
-  };
+  const [name, setName] = useState(observation.observation_name);
+  const [dateOfBirth, setDateOfBirth] = useState(observation.observation_dateOfBirth);
+  const [comments, setComments] = useState(observation.observation_comments);
   const showAlert = () =>
-    Alert.alert('Confirmation', `Name: ${name}\nLocation: ${location}\nDate: ${dateOfBirth}\nLength:${lenght}\n Packing:${packing ? 'Yes' : 'No'}\n Difficulty level: ${level}\nDescription: ${description}`, [
+    Alert.alert('Confirmation', `Observation: ${name}\nDate: ${dateOfBirth}\nComments: ${comments}`, [
       {
         text: 'Cancel',
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      { text: 'OK', onPress: () => handleAddHike() },
+      { text: 'OK', onPress: () => handleUpdateObservation() },
     ]);
-  const handleAddHike = async () => {
+  const handleUpdateObservation = async () => {
     try {
-      await Database.addHikes(userId,name, location, dateOfBirth, packing, lenght, level, description);
+      await Database.updateObservation(observation.id, name, dateOfBirth,comments);
       navigation.goBack();
     } catch (error) {
-      console.error("Lỗi khi thêm hike: " + error);
-      // Xử lý lỗi ở đây nếu cần thiết
+      console.error("Err : " + error);
     }
   };
-
-
-
   const toggleDatepicker = () => {
     setShowPicker(!showPicker);
   };
@@ -63,34 +48,25 @@ const Add = ({ navigation,route }) => {
     setDateOfBirth(date.toDateString());
     toggleDatepicker();
   };
-
   return (
     <ImageBackground source={require('../assets/image/bgr.png')} style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonBack}>
           <Ionicons name="arrow-back-circle" size={40} color="white" />
         </TouchableOpacity>
-        <Text style={styles.textEdit}>Add New Hike</Text>
+        <Text style={styles.textEdit}>Edit Observation</Text>
       </View>
-      <ScrollView style={styles.content}>
-        <KeyboardAvoidingView
-          behavior="padding"
-        >
-          <View style={styles.itemInput}>
-            <Text style={styles.titleInput}>Name of the hike *</Text>
-            <TextInput style={styles.input}
-              onChangeText={text => setName(text)}
-            />
-          </View>
-        </KeyboardAvoidingView>
+      <View style={styles.content}>
         <View style={styles.itemInput}>
-          <Text style={styles.titleInput}>Location *</Text>
+          <Text style={styles.titleInput}>Observation *</Text>
           <TextInput style={styles.input}
-            onChangeText={text => setLocation(text)}
+            onChangeText={text => setName(text)}
+            value={name}
+
           />
         </View>
         <View style={styles.itemInput}>
-          <Text style={styles.titleInput}>Date of the hike *</Text>
+          <Text style={styles.titleInput}>Time of the observation *</Text>
           {showPicker && (
             <DataTimePicker
               display="spinner"
@@ -127,69 +103,31 @@ const Add = ({ navigation,route }) => {
                 <TextInput style={styles.input}
                   onChangeText={setDateOfBirth}
                   value={dateOfBirth}
-                  placeholder='Sat Aug 21 2004'
                   onPressIn={toggleDatepicker}
                 />
               </Pressable>
             )}
           </View>
         </View>
-        <View style={[styles.itemInput, styles.itemCheckbox]}>
-          <Text style={styles.titleInput}>Parking available *</Text>
-          <View style={styles.qaCheckbox}>
-            <Checkbox
-              value={isCheckbox}
-              onValueChange={(value) => handleCheckboxChange(value)}
-              color={isCheckbox ? COLORS.black : undefined}
-            />
-            <Text style={styles.titleInput}>Yes</Text>
-          </View>
-          <View style={styles.qaCheckbox}>
-            <Checkbox
-              value={!isCheckbox}
-              onValueChange={(value) => handleCheckboxChange(!value)}
-              color={!isCheckbox ? COLORS.black : undefined}
-            />
-            <Text style={styles.titleInput}>No</Text>
-          </View>
-        </View>
-        <View style={[styles.itemInput, styles.itemCheckbox]}>
-          <Text style={styles.titleInput}>Lenght of the hike *</Text>
-          <TextInput style={styles.inputTwo}
-            onChangeText={text => setLength(text)}
+        <View style={styles.itemInput}>
+          <Text style={styles.titleInput}>Comments</Text>
+          <TextInput style={styles.description}
+            textAlignVertical="top"
+            multiline={true}
+            onChangeText={text => setComments(text)}
+            value={comments}
           />
         </View>
-        <View style={[styles.itemInput, styles.itemCheckbox]}>
-          <Text style={styles.titleInput}>Difficulty level *</Text>
-          <TextInput style={styles.inputTwo}
-            onChangeText={text => setLevel(text)}
-          />
-        </View>
-        <KeyboardAvoidingView
-          behavior="padding"
-          style={{ flex: 1 }} // Đảm bảo nội dung điều chỉnh kích thước màn hình
-        >
-          <View style={styles.itemInput}>
-            <Text style={styles.titleInput}>Description</Text>
-            <TextInput style={styles.description}
-              textAlignVertical="top"
-              multiline={true}
-              onChangeText={text => setDescription(text)}
-            />
-          </View>
-        </KeyboardAvoidingView>
-        {/* <Button title="Show alert" onPress={showAlert} /> */}
-        {/* <AddHike name={name} location={location} dateOfBirth={dateOfBirth} packing={packing} lenght={lenght} level={level} description={description} /> */}
         <TouchableOpacity onPress={showAlert} style={styles.buttonUpdate}>
-          <Text style={styles.textUpdate}>Add</Text>
+          <Text style={styles.textUpdate}>Update</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
       <View style={styles.bottom}>
-        <TouchableOpacity style={styles.item}>
-          <Text style={styles.textItem}>Friends</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.item}>
-          <Text style={styles.textItem}>Home</Text>
+          <Text style={styles.textItem}>Hikes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("AddObservation",{userId:userId})} style={styles.item}>
+          <Text style={styles.textItem}>Add</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.item}>
           <Text style={styles.textItem}>Search</Text>
@@ -199,7 +137,7 @@ const Add = ({ navigation,route }) => {
   );
 }
 
-export default Add
+export default DetailObservation
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -274,27 +212,23 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   bottom: {
+    backgroundColor: '#CC00FF',
     paddingHorizontal: 30,
     paddingVertical: 20,
     bottom: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#CC66CC',
   },
   textItem: {
     fontWeight: 'bold',
     fontSize: 20,
     color: 'white',
   },
-  datePicker: {
-    height: 120,
-    marginTop: -10,
-  },
   buttonUpdate: {
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 20,
-    backgroundColor: '#CC00FF',
+    backgroundColor: '#CC66CC',
   },
   textUpdate: {
     fontSize: 20,

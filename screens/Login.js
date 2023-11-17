@@ -21,7 +21,7 @@ const Login = ({ navigation }) => {
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         const user = userCredential.user;
-        navigation.navigate("Home")
+        navigation.navigate("Home",{userId:user.uid})
     })
     .catch((error) => {
         const errorCode = error.code;

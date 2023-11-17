@@ -4,11 +4,17 @@ import Signup from "./Signup";
 import Home from "./Home";
 import Detail from "./Detail";
 import Add from "./Add";
+import Observation from "./Observation";
+import AddObservation from "./AddObservation";
+import DetailObservation from "./DetailObservation";
 export {
     Login,
     Welcome,
     Signup,
     Home,
     Detail,
-    Add
+    Add,
+    Observation,
+    AddObservation,
+    DetailObservation
 }

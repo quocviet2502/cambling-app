@@ -1,44 +1,33 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground, Alert, Pressable, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
 import COLORS from '../constants/colors';
 import { Ionicons } from "@expo/vector-icons";
-import Checkbox from 'expo-checkbox';
 import DataTimePicker from '@react-native-community/datetimepicker';
 import Database from "../Database";
 import React, { useState } from 'react'
 
-const Add = ({ navigation,route }) => {
+const AddObservation = ({ navigation,route }) => {
   const { userId } = route.params;
-  const [isCheckbox, setIsCheckbox] = useState(true);
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [packing, setPacking] = useState(true);
-  const [lenght, setLength] = useState("");
-  const [level, setLevel] = useState("");
-  const [description, setDescription] = useState("");
+  const [comments, setComments] = useState("");
 
-  const handleCheckboxChange = (value) => {
-    setIsCheckbox(value);
-    setPacking(value); // Lưu giá trị vào biến packing
-  };
   const showAlert = () =>
-    Alert.alert('Confirmation', `Name: ${name}\nLocation: ${location}\nDate: ${dateOfBirth}\nLength:${lenght}\n Packing:${packing ? 'Yes' : 'No'}\n Difficulty level: ${level}\nDescription: ${description}`, [
+    Alert.alert('Confirmation', `Observation: ${name}\nDate: ${dateOfBirth}\Comments: ${comments}`, [
       {
         text: 'Cancel',
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      { text: 'OK', onPress: () => handleAddHike() },
+      { text: 'OK', onPress: () => handleAddObservation() },
     ]);
-  const handleAddHike = async () => {
+  const handleAddObservation = async () => {
     try {
-      await Database.addHikes(userId,name, location, dateOfBirth, packing, lenght, level, description);
+      await Database.addObservation(userId,name,dateOfBirth, comments);
       navigation.goBack();
     } catch (error) {
-      console.error("Lỗi khi thêm hike: " + error);
-      // Xử lý lỗi ở đây nếu cần thiết
+      console.error("Error: " + error);
     }
   };
 
@@ -70,27 +59,21 @@ const Add = ({ navigation,route }) => {
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.buttonBack}>
           <Ionicons name="arrow-back-circle" size={40} color="white" />
         </TouchableOpacity>
-        <Text style={styles.textEdit}>Add New Hike</Text>
+        <Text style={styles.textEdit}>Add New Observation</Text>
       </View>
       <ScrollView style={styles.content}>
         <KeyboardAvoidingView
           behavior="padding"
         >
           <View style={styles.itemInput}>
-            <Text style={styles.titleInput}>Name of the hike *</Text>
+            <Text style={styles.titleInput}>Observation *</Text>
             <TextInput style={styles.input}
               onChangeText={text => setName(text)}
             />
           </View>
         </KeyboardAvoidingView>
         <View style={styles.itemInput}>
-          <Text style={styles.titleInput}>Location *</Text>
-          <TextInput style={styles.input}
-            onChangeText={text => setLocation(text)}
-          />
-        </View>
-        <View style={styles.itemInput}>
-          <Text style={styles.titleInput}>Date of the hike *</Text>
+          <Text style={styles.titleInput}>Time of observation *</Text>
           {showPicker && (
             <DataTimePicker
               display="spinner"
@@ -134,62 +117,29 @@ const Add = ({ navigation,route }) => {
             )}
           </View>
         </View>
-        <View style={[styles.itemInput, styles.itemCheckbox]}>
-          <Text style={styles.titleInput}>Parking available *</Text>
-          <View style={styles.qaCheckbox}>
-            <Checkbox
-              value={isCheckbox}
-              onValueChange={(value) => handleCheckboxChange(value)}
-              color={isCheckbox ? COLORS.black : undefined}
-            />
-            <Text style={styles.titleInput}>Yes</Text>
-          </View>
-          <View style={styles.qaCheckbox}>
-            <Checkbox
-              value={!isCheckbox}
-              onValueChange={(value) => handleCheckboxChange(!value)}
-              color={!isCheckbox ? COLORS.black : undefined}
-            />
-            <Text style={styles.titleInput}>No</Text>
-          </View>
-        </View>
-        <View style={[styles.itemInput, styles.itemCheckbox]}>
-          <Text style={styles.titleInput}>Lenght of the hike *</Text>
-          <TextInput style={styles.inputTwo}
-            onChangeText={text => setLength(text)}
-          />
-        </View>
-        <View style={[styles.itemInput, styles.itemCheckbox]}>
-          <Text style={styles.titleInput}>Difficulty level *</Text>
-          <TextInput style={styles.inputTwo}
-            onChangeText={text => setLevel(text)}
-          />
-        </View>
         <KeyboardAvoidingView
           behavior="padding"
           style={{ flex: 1 }} // Đảm bảo nội dung điều chỉnh kích thước màn hình
         >
           <View style={styles.itemInput}>
-            <Text style={styles.titleInput}>Description</Text>
+            <Text style={styles.titleInput}>Comments</Text>
             <TextInput style={styles.description}
               textAlignVertical="top"
               multiline={true}
-              onChangeText={text => setDescription(text)}
+              onChangeText={text => setComments(text)}
             />
           </View>
         </KeyboardAvoidingView>
-        {/* <Button title="Show alert" onPress={showAlert} /> */}
-        {/* <AddHike name={name} location={location} dateOfBirth={dateOfBirth} packing={packing} lenght={lenght} level={level} description={description} /> */}
         <TouchableOpacity onPress={showAlert} style={styles.buttonUpdate}>
-          <Text style={styles.textUpdate}>Add</Text>
+          <Text style={styles.textUpdate}>Add Observation</Text>
         </TouchableOpacity>
       </ScrollView>
       <View style={styles.bottom}>
-        <TouchableOpacity style={styles.item}>
-          <Text style={styles.textItem}>Friends</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("Home")} style={styles.item}>
-          <Text style={styles.textItem}>Home</Text>
+          <Text style={styles.textItem}>Hikes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Observation")} style={styles.item}>
+          <Text style={styles.textItem}>Observation</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.item}>
           <Text style={styles.textItem}>Search</Text>
@@ -199,7 +149,7 @@ const Add = ({ navigation,route }) => {
   );
 }
 
-export default Add
+export default AddObservation
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -216,7 +166,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   textEdit: {
-    marginLeft: 70,
     fontSize: 30,
     color: COLORS.while,
     fontWeight: 'bold',

@@ -2,7 +2,7 @@ import React,{useEffect} from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { Login,Signup,Welcome,Home,Detail,Add } from './screens';
+import { Login,Signup,Welcome,Home,Detail,Add,Observation,AddObservation,DetailObservation } from './screens';
 import Database from "./Database";
 const Stack = createNativeStackNavigator()
 
@@ -14,7 +14,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName = "Home"
+        initialRouteName = "Welcome"
       >
         <Stack.Screen
           name="Welcome"
@@ -54,6 +54,27 @@ export default function App() {
         <Stack.Screen
           name="Add"
           component={Add}
+          options={{
+            headerShown:false
+          }}
+        />
+        <Stack.Screen
+          name="Observation"
+          component={Observation}
+          options={{
+            headerShown:false
+          }}
+        />
+        <Stack.Screen
+          name="AddObservation"
+          component={AddObservation}
+          options={{
+            headerShown:false
+          }}
+        />
+        <Stack.Screen
+          name="DetailObservation"
+          component={DetailObservation}
           options={{
             headerShown:false
           }}
